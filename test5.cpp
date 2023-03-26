@@ -16,24 +16,30 @@ SDL_Surface *gScreenSurface = NULL;
 SDL_Texture *gTexture= NULL;
 SDL_Renderer *gRenderer = NULL;
 
-static void verline(int x, uint32_t col)
+static void verlines(int y0,int y1,int x,uint32_t col)
 {
-    x = x<SCREEN_WIDTH-1?x:SCREEN_WIDTH-1;
-    for(int y=0;y <SCREEN_HIGHT;y++)
+    x = x<SCREEN_WIDTH-1?x:SCREEN_WIDTH;
+    for(int y=y0;y<y1;y++)
     {
-        pixel[x+(SCREEN_HIGHT*y)]=col;
+        pixel[x+(SCREEN_WIDTH*y)] = col;
     }
-
 }
-
+static void horlines(int x0, int x1, int y, uint32_t col)
+{
+    y= y<SCREEN_HIGHT-1?y:SCREEN_HIGHT-1;
+    for(int x=x0; x<x1;++x)
+    {
+        pixel[x+SCREEN_WIDTH*y] = col;
+    }
+}
 
 int main(int argc, char **argv)
 {
-    
+    verlines(0,SCREEN_HIGHT,100,0XFF0000FF);
+    // horlines(0,SCREEN_WIDTH,100,0XFF0000FF);
 
     // randpts(SCREEN_WIDTH,SCREEN_HIGHT);
     init();
-    verline(5,0xff0000ff);
     SDL_SetRenderDrawColor(gRenderer,0x00,0x00,0x00,0x00);
     bool running = true;
     SDL_Event e;
@@ -53,9 +59,9 @@ int main(int argc, char **argv)
         SDL_UpdateTexture(gTexture,NULL,pixel,SCREEN_WIDTH*4);
         SDL_RenderClear(gRenderer);
 
-        // SDL_RenderCopy(gRenderer,gTexture,NULL,NULL);
+        SDL_RenderCopy(gRenderer,gTexture,NULL,NULL);
         
-        SDL_RenderCopyEx(gRenderer,gTexture,NULL,NULL,0.0,NULL,SDL_FLIP_VERTICAL);
+        // SDL_RenderCopyEx(gRenderer,gTexture,NULL,NULL,0.0,NULL,SDL_FLIP_VERTICAL);
         SDL_RenderPresent(gRenderer);
         
     }
